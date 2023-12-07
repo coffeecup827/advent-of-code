@@ -15,7 +15,7 @@ public class Solution {
   private static final String PART = "1";
   private static final Logger logger = Logger.getLogger(Solution.class.getName());
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws Exception {
     BufferedReader reader = null;
     try {
       Path path = Paths.get("src/main/java/day" + DAY + "/part" + PART + "/input.txt");
@@ -27,7 +27,7 @@ public class Solution {
         solution(inputs);
       }
 
-    } catch (IOException e) {
+    } catch (Exception e) {
       logger.warning("Failed to read file");
       e.printStackTrace();
     } finally {
@@ -37,10 +37,33 @@ public class Solution {
     }
   }
 
-  private static void solution (ArrayList<String> inputs) {
+  private static void solution (ArrayList<String> inputs) throws IOException {
 
-    logger.info(inputs.get(0));
+    int sum = 0;
+    for (String input : inputs) {
+      sum += Integer.parseInt(findFirstInteger(input) + findLastInteger(input));
+    }
 
+    logger.info("Calibration: " + sum);
+
+  }
+
+  private static String findFirstInteger(String input) throws IOException {
+    for (int i = 0; i < input.length(); i++) {
+      if (Character.isDigit(input.charAt(i))) {
+        return String.valueOf(input.charAt(i));
+      }
+    }
+    throw new IOException("Integer Not Found");
+  }
+
+  private static String findLastInteger(String input) throws IOException {
+    for (int i = input.length() - 1; i >= 0; i--) {
+      if (Character.isDigit(input.charAt(i))) {
+        return String.valueOf(input.charAt(i));
+      }
+    }
+    throw new IOException("Integer Not Found");
   }
 
 }
