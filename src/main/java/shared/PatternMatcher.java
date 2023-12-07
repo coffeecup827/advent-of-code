@@ -21,7 +21,15 @@ public class PatternMatcher {
     }
   }
 
-  public String findFirstMatch(String input) throws IOException {
+  public String findFirstMatched(String input) throws IOException {
+    return findMatch(input, ((index, matched) -> matched));
+  }
+
+  public int findFirstMatchedIndex(String input) throws IOException {
+    return Integer.parseInt(findMatch(input, ((index, matched) -> String.valueOf(index))));
+  }
+
+  private String findMatch(String input, MatchResult matchResult) throws IOException {
     // we create a map with keys that have the same starting letter
     // this is just a optimisation so the lookups for first match is faster
     ArrayList<ArrayList<String>> possibleMatches = new ArrayList<>();
@@ -53,7 +61,7 @@ public class PatternMatcher {
           if (match.charAt(possibleMatchIndex) == currentChar) {
             // check if its a full match, if yes return it
             if (match.length() == possibleMatchIndex + 1) {
-              return match;
+              return matchResult.result(inputIndex, match);
             }
           } else {
             // if its not a match remove from matches
@@ -87,6 +95,10 @@ public class PatternMatcher {
       possibleMatches.remove(i);
     }
 
+  }
+
+  interface MatchResult {
+    String result(int index, String matched);
   }
 
 }

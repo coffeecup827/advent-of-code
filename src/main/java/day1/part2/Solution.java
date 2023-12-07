@@ -53,8 +53,8 @@ public class Solution {
 
     for (String input: inputs) {
       sum += Integer.parseInt(
-          digits.get(straightPatternMatcher.findFirstMatch(input))
-              + digits.get(reverseString(reversedPatternMatcher.findFirstMatch(reverseString(input)))));
+          digits.get(straightPatternMatcher.findFirstMatched(input))
+              + digits.get(reverseString(reversedPatternMatcher.findFirstMatched(reverseString(input)))));
     }
 
     logger.info("Calibration: " + sum);
