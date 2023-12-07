@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+//Answer: 54504
 public class Solution {
 
   private static final String DAY = "1";
