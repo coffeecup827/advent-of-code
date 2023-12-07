@@ -56,18 +56,22 @@ public class Solution {
   }
 
   private static String findFirstMatch(String input, ArrayList<String> keys) throws IOException {
+    // we create a map with keys that have the same starting letter
+    // this is just a optimisation so the lookups for first match is faster
     HashMap<Character, ArrayList<String>> matchMap = createMatchMap(keys);
     ArrayList<ArrayList<String>> possibleMatches = new ArrayList<>();
 
+    // we loop through the input
     for (int inputIndex = 0; inputIndex < input.length(); inputIndex++) {
       char currentChar = input.charAt(inputIndex);
 
       // check if the current character is start of a new match
       // if yes add it to the matches at start and shift other matches to their respective next indices
-      // else add null to start as we have to shift everything by one index any ways
+      // else add null to start as we have to shift everything by one index any ways so that we match the
+      // next characters
 
       // Note: Adding to index 0 also means that the first character matches
-      // this also means that the position of the matches list tells the number of characters that matched
+      // this also means that the index + 1 of the matches list tells the number of characters that matched
       // if its index+1 matches its size, that means its a match!
       ArrayList<String> list = matchMap.getOrDefault(currentChar, new ArrayList<>());
       possibleMatches.add(0, new ArrayList<>(list));
@@ -94,6 +98,7 @@ public class Solution {
         removeIndexes(matches, indexesToRemove);
       }
 
+      // this is to avoid unnecessary looping into the empty lists
       removeNullsInTheEnd(possibleMatches);
     }
 
