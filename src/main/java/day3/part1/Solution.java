@@ -1,20 +1,15 @@
 package day3.part1;
 
-
-import shared.PatternMatcher;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-//Answer:
+//Answer: 546563
 public class Solution {
 
   private static final String DAY = "3";
