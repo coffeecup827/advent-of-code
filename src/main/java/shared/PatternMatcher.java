@@ -26,7 +26,7 @@ public class PatternMatcher {
   }
 
   public int findFirstMatchedIndex(String input) throws IOException {
-    return Integer.parseInt(findMatch(input, ((index, matched) -> String.valueOf(index))));
+    return Integer.parseInt(findMatch(input, ((index, matched) -> String.valueOf(index - matched.length() + 1))));
   }
 
   private String findMatch(String input, MatchResult matchResult) throws IOException {
