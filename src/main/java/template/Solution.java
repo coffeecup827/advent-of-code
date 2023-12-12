@@ -27,7 +27,6 @@ public class Solution {
       solution(inputs);
     } catch (IOException e) {
       logger.warning("Failed to read file");
-      e.printStackTrace();
     } finally {
       if (reader != null) {
         reader.close();

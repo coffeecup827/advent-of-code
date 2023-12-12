@@ -7,11 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-// Answer:
+// Answer: 91031374
 public class Solution {
 
   private static final String DAY = "3";
@@ -28,7 +27,6 @@ public class Solution {
       solution(inputs);
     } catch (IOException e) {
       logger.warning("Failed to read file");
-      e.printStackTrace();
     } finally {
       if (reader != null) {
         reader.close();
@@ -45,63 +43,75 @@ public class Solution {
       for (int currentLineIndex = 0; currentLineIndex < currentLine.length(); currentLineIndex++) {
         if (currentLine.charAt(currentLineIndex) == '*') {
           ArrayList<Integer> gearRatio = findGearRatio(inputs, inputIndex, currentLineIndex);
-          if (!gearRatio.isEmpty() && gearRatio.size() > 1) {
+          if (gearRatio.size() == 2) {
+            // if there are more numbers around a gear, its not two part number anymore
             gearRatios.add(gearRatio);
           }
         }
       }
     }
 
-    System.out.println(gearRatios);
     gearSum = gearRatios.stream().mapToInt(x -> x.get(0) * x.get(1)).sum();
     logger.info(String.valueOf(gearSum));
   }
 
   private static ArrayList<Integer> findGearRatio(ArrayList<String> inputs, int inputIndex, int currentLineIndex) {
     ArrayList<Integer> gearRatio = new ArrayList<>();
-    int topNumber = -1;
-    int bottomNumber = -1;
-    int leftNumber = -1;
-    int rightNumber = -1;
 
+    String currentLine = inputs.get(inputIndex);
+    gearRatio.add(getRightNumber(currentLine, currentLineIndex));
+    gearRatio.add(getLeftNumber(currentLine, currentLineIndex));
 
     if (inputIndex - 1 >= 0) {
-      topNumber = findFullNumberAt(inputs.get(inputIndex - 1), currentLineIndex);
-      if (topNumber != -1) {
-        gearRatio.add(topNumber);
-      }
-    }
-    if (inputIndex + 1 < inputs.size()) {
-      bottomNumber = findFullNumberAt(inputs.get(inputIndex + 1), currentLineIndex);
-      if (bottomNumber != -1) {
-        gearRatio.add(bottomNumber);
+      String topLine = inputs.get(inputIndex - 1);
+      if (Character.isDigit(topLine.charAt(currentLineIndex))) {
+        // if yes number is at
+        // 2345
+        // .*..
+        gearRatio.add(findFullNumberAt(topLine, currentLineIndex));
+      } else {
+        // if not number could be at
+        // 2.4.
+        // .*..
+        gearRatio.add(getRightNumber(topLine, currentLineIndex));
+        gearRatio.add(getLeftNumber(topLine, currentLineIndex));
       }
     }
 
-    if (currentLineIndex > 0) {
-      leftNumber = findFullNumberAt(inputs.get(inputIndex), currentLineIndex - 1);
-      if (leftNumber != -1) {
-        gearRatio.add(leftNumber);
+    if (inputIndex + 1 < inputs.size()) {
+      String botLine = inputs.get(inputIndex + 1);
+      if (Character.isDigit(botLine.charAt(currentLineIndex))) {
+        gearRatio.add(findFullNumberAt(botLine, currentLineIndex));
+      } else {
+        gearRatio.add(getRightNumber(botLine, currentLineIndex));
+        gearRatio.add(getLeftNumber(botLine, currentLineIndex));
       }
     }
-    if (currentLineIndex + 1 < inputs.get(inputIndex).length()) {
-      rightNumber = findFullNumberAt(inputs.get(inputIndex), currentLineIndex + 1);
-      if (rightNumber != -1) {
-        gearRatio.add(rightNumber);
-      }
-    }
+
+    while (gearRatio.remove(null));
 
     return gearRatio;
   }
 
-  private static int findFullNumberAt(String str, int index) {
+  private static Integer getLeftNumber(String str, int index) {
+    int leftIndex = index - 1;
+    // check if top left exists
+    if (index != 0 && Character.isDigit(str.charAt(leftIndex))) {
+      return findFullNumberAt(str, leftIndex);
+    }
+    return null;
+  }
 
-    int numberAtIndex =
-        Character.isDigit(str.charAt(index)) ? index :
-            Character.isDigit(str.charAt(index + 1)) ? index + 1 :
-                Character.isDigit(str.charAt(index - 1)) ? index - 1 :
-                    -1;
+  private static Integer getRightNumber(String str, int index) {
+    int rightIndex = index + 1;
+    // check if right exists
+    if (index != str.length() - 1 && Character.isDigit(str.charAt(rightIndex))) {
+      return  findFullNumberAt(str, rightIndex);
+    }
+    return null;
+  }
 
+  private static int findFullNumberAt(String str, int numberAtIndex) {
     int firstIndex = numberAtIndex;
     int lastIndex = -1;
 
